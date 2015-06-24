@@ -1,4 +1,5 @@
-package com.client.hw;
+//Coded by Mike Schmidt, 2015
+package edu.govst.advdb.finalproject;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -6,8 +7,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.text.DecimalFormat;
 import java.util.Scanner;
-import com.interf.hw.Constant;
-import com.interf.hw.RMIInterface;
+import edu.govst.advdb.finalproject.Constant;
+import edu.govst.advdb.finalproject.RMIInterface;
 
 public class RMIClient {
 
