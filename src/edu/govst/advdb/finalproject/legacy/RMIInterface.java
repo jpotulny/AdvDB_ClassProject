@@ -1,6 +1,6 @@
 //Coded by Mike Schmidt, 2015
 
-package edu.govst.advdb.finalproject;
+package edu.govst.advdb.finalproject.legacy;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,5 +1,5 @@
 //Coded by Mike Schmidt, 2015
-package edu.govst.advdb.finalproject;
+package edu.govst.advdb.finalproject.legacy;
 
 public class Constant {
 

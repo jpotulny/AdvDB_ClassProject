@@ -1,14 +1,14 @@
 //Coded by Mike Schmidt, 2015
 
 
-package edu.govst.advdb.finalproject;
+package edu.govst.advdb.finalproject.legacy;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import edu.govst.advdb.finalproject.Constant;
+import edu.govst.advdb.finalproject.legacy.Constant;
 
 public class RMIServer {
 

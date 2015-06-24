@@ -1,5 +1,5 @@
 //Coded by Mike Schmidt, 2015
-package edu.govst.advdb.finalproject;
+package edu.govst.advdb.finalproject.legacy;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -7,8 +7,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.text.DecimalFormat;
 import java.util.Scanner;
-import edu.govst.advdb.finalproject.Constant;
-import edu.govst.advdb.finalproject.RMIInterface;
+
+import edu.govst.advdb.finalproject.legacy.Constant;
+import edu.govst.advdb.finalproject.legacy.RMIInterface;
 
 public class RMIClient {
 

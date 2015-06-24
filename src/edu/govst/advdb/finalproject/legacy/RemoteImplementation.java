@@ -1,6 +1,6 @@
 //Coded by Mike Schmidt, 2015
 
-package edu.govst.advdb.finalproject;
+package edu.govst.advdb.finalproject.legacy;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import edu.govst.advdb.finalproject.RMIInterface;
+import edu.govst.advdb.finalproject.legacy.RMIInterface;
 
 public class RemoteImplementation extends UnicastRemoteObject implements
 		RMIInterface {
