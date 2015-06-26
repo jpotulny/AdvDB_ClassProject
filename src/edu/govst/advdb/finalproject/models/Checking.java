@@ -3,9 +3,22 @@ package edu.govst.advdb.finalproject.models;
 public class Checking implements BankAccount {
 
 	private long customer; //Customer ID
+	private long accountNumber;
 	private double checkingBalance = 0;
 	private double minimumBalance;
 	private double overdraftCharge;
+	
+	public long getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public void setCustomer(long customer) {
+		this.customer = customer;
+	}
 	
 	public long getCustomer() {
 		return customer;

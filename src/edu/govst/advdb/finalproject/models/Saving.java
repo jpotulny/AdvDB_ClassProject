@@ -2,11 +2,28 @@ package edu.govst.advdb.finalproject.models;
 
 public class Saving implements BankAccount {
 
+	private long customerId;
+	private long accountNumber;
 	private double savingsBalance;
 	private double minimumBalance;
 	private double interestRate;
 	private CompoundingType compoundingType = CompoundingType.ANNUALLY;
 	
+	public long getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
+	}
+	
+	public long getCustomerId() {
+		return this.customerId;
+	}
 	
 	public void setSavingsBalance(double savingsBalance) {
 		this.savingsBalance = savingsBalance;
