@@ -10,13 +10,21 @@ public class Customer {
 	private String lastName;
 	private String ssn;
 	private String address;
+	private String city;
+	private String state;
+	private long zip;
 	private String homePhone;
-	private String cellPhone;
+	private String otherPhone;
 	private int pin;
-	private List<BankAccount> accounts;
+	private List<Account> accounts;
+	
+	
+	public String getFormattedName() {
+		return lastName + ", " + firstName;
+	}
 	
 	public Customer() {
-		accounts = new ArrayList<BankAccount>();
+		accounts = new ArrayList<Account>();
 	}
 	
 	public long getCustomerId() {
@@ -56,10 +64,10 @@ public class Customer {
 		this.homePhone = homePhone;
 	}
 	public String getCellPhone() {
-		return cellPhone;
+		return otherPhone;
 	}
 	public void setCellPhone(String cellPhone) {
-		this.cellPhone = cellPhone;
+		this.otherPhone = cellPhone;
 	}
 	public int getPin() {
 		return pin;
@@ -68,7 +76,40 @@ public class Customer {
 		this.pin = pin;
 	}
 	
-	public List<BankAccount> getAccounts() {
+	public List<Account> getAccounts() {
 		return accounts;
+	}
+
+	public void setCity(String city) {
+		this.city  = city;
+	}
+	
+	public String getCity() {
+		// TODO Auto-generated method stub
+		return this.city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public long getZip() {
+		return zip;
+	}
+
+	public void setZip(long zip) {
+		this.zip = zip;
+	}
+
+	public String getOtherPhone() {
+		return otherPhone;
+	}
+
+	public void setOtherPhone(String otherPhone) {
+		this.otherPhone = otherPhone;
 	}
 }

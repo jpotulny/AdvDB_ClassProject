@@ -1,16 +1,13 @@
 package edu.govst.advdb.finalproject.dal;
 
-import edu.govst.advdb.finalproject.models.Checking;
 import edu.govst.advdb.finalproject.models.Customer;
-import edu.govst.advdb.finalproject.models.Saving;
 import edu.govst.advdb.finalproject.models.Transaction;
 
 public abstract class AbstractConnectionFactory {
 
 	DbTypes database;
 
-	public abstract CheckingDAO getCheckingAccountDAO();
-	public abstract SavingDAO getSavingAccountDAO();
+	public abstract AccountDAO getAccountDAO();
 	public abstract TransactionDAO getTransactionDAO();
 	public abstract CustomerDAO getCustomerDAO();
 
@@ -19,10 +16,9 @@ public abstract class AbstractConnectionFactory {
 
 		switch (db) {
 		case ORACLE: 
-			return new OracleDAOFactory();
+			return new DAOFactory();
 		case MSSQL:
-			MicrosoftDAOFactory
-			return new MicrosoftDAOFactory();      
+			return new DAOFactory();      
 		default: 
 			throw new IllegalArgumentException();
 		}
