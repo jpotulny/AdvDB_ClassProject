@@ -16,9 +16,9 @@ public abstract class AbstractConnectionFactory {
 
 		switch (db) {
 		case ORACLE: 
-			return new DAOFactory();
+			return new DAOFactory("oracle.jdbc.driver.OracleDriver");
 		case MSSQL:
-			return new DAOFactory();      
+			return new DAOFactory("oracle.jdbc.driver.OracleDriver");      
 		default: 
 			throw new IllegalArgumentException();
 		}

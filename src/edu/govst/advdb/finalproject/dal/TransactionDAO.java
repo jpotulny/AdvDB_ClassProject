@@ -7,11 +7,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.govst.advdb.finalproject.models.Customer;
 import edu.govst.advdb.finalproject.models.Transaction;
 
 public class TransactionDAO implements basicCrud<Transaction,String> {
 
 	private DbTypes dbtype;
+	private String driver = "oracle.jdbc.driver.OracleDriver";
 	private String username;
 	private String password;
 	private List<Transaction> transactions;
@@ -25,8 +27,9 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 	public Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
-		conn = DriverManager.getConnection(dbtype.toString());
-		} catch (SQLException e) {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(dbtype.toString());
+		} catch (SQLException | ClassNotFoundException e) {
 			try {
 				conn = DriverManager.getConnection(dbtype.toString(), username, password);
 			} catch(SQLException f) {
@@ -35,6 +38,10 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 			}
 		}
 		return conn;
+	}
+	
+	public List<Transaction> getTransactions() {
+		return transactions;
 	}
 	
 	@Override

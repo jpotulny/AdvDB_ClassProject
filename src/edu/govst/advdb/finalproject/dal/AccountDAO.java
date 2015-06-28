@@ -13,14 +13,16 @@ public class AccountDAO implements basicCrud<Account, String> {
 
 	private List<Account> accounts;
 
-	private DbTypes dbType;
+	private DbTypes dbType = DbTypes.ORACLE;
 
-	private String username;
+	private String username = "pots15";
 
-	private String password;
+	private String password = "pots15";
 
-	public AccountDAO(DbTypes dbType) {
-		this.dbType = dbType;
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	
+	public AccountDAO() {
+		//this.dbType = dbType;
 		accounts = new ArrayList<Account>();
 	}
 
@@ -30,7 +32,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 	
 	@Override
 	public void createRecord(Account record) {
-		final String COMMAND ="INSERT INTO Account (CustomerID, AccountType, CurrentBalance)" +
+		final String COMMAND ="INSERT INTO Account (Customer_ID, Account_Type, Balance)" +
 				"VALUES (?, ?, ?)";
 		accounts.add(record);
 		try {
@@ -86,8 +88,9 @@ public class AccountDAO implements basicCrud<Account, String> {
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 				try {
+					Class.forName(driver);
 					conn = DriverManager.getConnection(dbType.toString());
-				} catch (SQLException e) {
+				} catch (SQLException | ClassNotFoundException e) {
 					try {
 						conn = DriverManager.getConnection(dbType.toString(),username,password);
 					} catch (SQLException f) {
@@ -100,7 +103,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 
 	@Override
 	public boolean updateRecord(Account record) {
-		final String COMMAND ="	UPDATE Checking " +
+		final String COMMAND ="	UPDATE Account " +
 				"SET Customer_ID = ?, " +
 				"Account_Type = ?, " +
 				"Balance = ?" +
@@ -127,6 +130,10 @@ public class AccountDAO implements basicCrud<Account, String> {
 			accounts.set(index, record);
 		}
 		return false;
+	}
+	
+	public List<Account> getAccounts() {
+		return accounts;
 	}
 
 	@Override

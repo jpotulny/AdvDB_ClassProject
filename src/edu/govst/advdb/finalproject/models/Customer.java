@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Customer {
 
-	private long customerId;
+	private int customerId;
 	private String firstName;
 	private String lastName;
 	private String ssn;
 	private String address;
 	private String city;
 	private String state;
-	private long zip;
+	private String zip;
 	private String homePhone;
 	private String otherPhone;
-	private int pin;
+	private String pin;
 	private List<Account> accounts;
 	
 	
@@ -27,10 +27,10 @@ public class Customer {
 		accounts = new ArrayList<Account>();
 	}
 	
-	public long getCustomerId() {
+	public int getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
 	public String getFirstName() {
@@ -69,10 +69,10 @@ public class Customer {
 	public void setCellPhone(String cellPhone) {
 		this.otherPhone = cellPhone;
 	}
-	public int getPin() {
+	public String getPin() {
 		return pin;
 	}
-	public void setPin(int pin) {
+	public void setPin(String pin) {
 		this.pin = pin;
 	}
 	
@@ -97,11 +97,11 @@ public class Customer {
 		this.state = state;
 	}
 
-	public long getZip() {
+	public String getZip() {
 		return zip;
 	}
 
-	public void setZip(long zip) {
+	public void setZip(String zip) {
 		this.zip = zip;
 	}
 
