@@ -17,38 +17,34 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 	private String username;
 	private String password;
 	private List<Transaction> transactions;
-	
+
 	public TransactionDAO(DbTypes type) {
 		this.dbtype = type;
 		transactions = new ArrayList<Transaction>();
 	}
-	
-	
+
+
 	public Connection getConnection() throws SQLException {
 		Connection conn = null;
 		try {
 			Class.forName(driver);
-			conn = DriverManager.getConnection(dbtype.toString());
+			conn = DriverManager.getConnection(dbtype.toString(), username, password);
+			conn.setAutoCommit(true);
 		} catch (SQLException | ClassNotFoundException e) {
-			try {
-				conn = DriverManager.getConnection(dbtype.toString(), username, password);
-			} catch(SQLException f) {
-				f.printStackTrace();
-				throw f;
-			}
+			e.printStackTrace();
 		}
 		return conn;
 	}
-	
+
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
-	
+
 	@Override
 	public void createRecord(Transaction record) {
 		final String DEPOSIT_COMMAND = "INSERT INTO Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, 0, ?)";
 		final String WITHDRAW_COMMAND = "INSERT INTO Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, ?, 0)";
-		
+
 		try {
 			Connection conn = getConnection();
 			PreparedStatement stmt = null;
@@ -59,12 +55,15 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 				stmt = conn.prepareStatement(DEPOSIT_COMMAND);
 				stmt.setString(1, "Deposit");
 			}
-			
+
 			stmt.setLong(2, record.getAccountNumber());
 			stmt.setDouble(3, record.getAmount());
-			
+
 			stmt.execute();
-			
+			stmt.close();
+
+			conn.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -92,6 +91,7 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 				stmt.setString(1, record);
 				stmt.execute();
 				stmt.close();
+				conn.commit();
 				conn.close();
 
 			} catch (SQLException e) {
@@ -111,41 +111,58 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 				"Deposit = ?" + 
 				"WHERE Transaction_No = ?";
 
-		if(transactions.contains(record)) {
-			try {
-				Connection conn = getConnection();
+		for(int x = 0; x < transactions.size(); x++) {
+			if(transactions.get(x).getTransactionNumber() == record.getTransactionNumber() ) {
+				try {
+					Connection conn = getConnection();
 
-				PreparedStatement stmt = conn.prepareStatement(COMMAND);
-				stmt.setString(1, record.getTransactionName());
-				stmt.setLong(2, record.getAccountNumber());
-				stmt.setLong(5, record.getTransactionNumber());
-				if(record.getAmount() < 0)
-				{
-					stmt.setDouble(3, record.getAmount());
-					stmt.setDouble(4, 0);
-				} else {
-					stmt.setDouble(3, 0);
-					stmt.setDouble(4, record.getAmount());
+					PreparedStatement stmt = conn.prepareStatement(COMMAND);
+					stmt.setString(1, record.getTransactionName());
+					stmt.setLong(2, record.getAccountNumber());
+					stmt.setLong(5, record.getTransactionNumber());
+					if(record.getAmount() < 0)
+					{
+						stmt.setDouble(3, record.getAmount());
+						stmt.setDouble(4, 0);
+					} else {
+						stmt.setDouble(3, 0);
+						stmt.setDouble(4, record.getAmount());
+					}
+
+
+					stmt.execute();
+					stmt.close();
+
+
+					conn.close();
+
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-				
-
-				stmt.execute();
-				stmt.close();
-				conn.close();
-
-			} catch (SQLException e) {
-				e.printStackTrace();
+				int index = indexOfById(transactions, record);
+				transactions.set(index, record);
 			}
-			int index = transactions.indexOf(record);
-			transactions.set(index, record);
 		}
 		return false;
 	}
 
+	static int indexOfById(List<Transaction> list, Transaction searchedObject) {
+		int x = 0;
+		for (Transaction t : list) {
+			if (t.getTransactionNumber() == searchedObject.getTransactionNumber()) return x;
+			x++;
+		}
+		return -1;
+	}  
+
+	/**
+	 * Only gets it if the record is in the cache.  If the database was updated externally, it won't find the record
+	 * until it reloads
+	 */
 	@Override
 	public Transaction getRecord(String record) {
 		Transaction transaction = null;
-		
+
 		for(int x = 0; x < transactions.size(); x++) {
 			if(Long.toString(transactions.get(x).getTransactionNumber()).equals(record)) {
 				transaction = transactions.get(x);

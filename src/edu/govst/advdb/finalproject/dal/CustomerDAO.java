@@ -47,10 +47,9 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 	public void createRecord(Customer record) {
 		final String CUSTOMER_COMMAND ="INSERT INTO Customer (First_Name, Last_Name, ssn, Street_Address, City, State, Zip, Primary_Phone, Other_Phone)" +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		final String PIN_COMMAND ="INSERT INTO Security (Customer_Id, Pin) VALUES (?,?)";
+		final String PIN_COMMAND ="INSERT INTO BANK_SECURITY (Customer_Id, Pin) VALUES (?,?)";
 		final String GET_CUST_ID ="SELECT MAX(Customer_ID) FROM Customer"; //Not thread safe
 
-		customers.add(record);
 		try {
 			Connection conn = getConnection();
 
@@ -90,8 +89,7 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-
+		customers.add(record);
 	}
 
 	private Connection getConnection() throws SQLException {
@@ -99,6 +97,7 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 		try {
 			Class.forName(driver);
 			conn = DriverManager.getConnection(dbType.toString(),username,password);
+			conn.setAutoCommit(true);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -119,19 +118,37 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 			}
 		}
 
+		Connection conn = null;
+		
 		if(recordFound) {
 			try {
-				Connection conn = getConnection();
+				conn = getConnection();
 
-				PreparedStatement stmt = conn.prepareStatement(COMMAND);
-				stmt.setInt(1, record);
+				PreparedStatement stmt = conn.prepareStatement("DELETE FROM ACCOUNT WHERE Customer_ID = ?");
+				stmt.setInt(1,record.intValue());
 				stmt.execute();
-				stmt.close();
-				conn.close();
+				
+				PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM BANK_SECURITY WHERE Customer_Id = ?");
+				stmt2.setInt(1, record.intValue());
+				stmt2.execute();
+				
+				PreparedStatement stmt3 = conn.prepareStatement(COMMAND);
+				stmt3.setInt(1, record);
+				stmt3.execute();
+				stmt3.close();
+
 
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try {
+				conn.rollback();
+				conn.close();
+				} catch(SQLException f) {
+					f.printStackTrace();
+				}
 			}
+			
 			return true;
 		}
 		return false; 
@@ -152,36 +169,46 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 				"other_phone = ? " +
 				"WHERE Customer_Id = ?";
 
-		if(customers.contains(record)) {
-			try {
-				Connection conn = getConnection();
+		for(int x = 0; x < customers.size(); x++) {
+			if(customers.get(x).getCustomerId() == record.getCustomerId()) {
+				try {
+					Connection conn = getConnection();
 
-				PreparedStatement stmt = conn.prepareStatement(COMMAND);
+					PreparedStatement stmt = conn.prepareStatement(COMMAND);
 
-				stmt.setInt(1, record.getCustomerId());
-				stmt.setString(2, record.getFirstName());
-				stmt.setString(3, record.getLastName());
-				stmt.setString(4, record.getSsn());
-				stmt.setString(5, record.getAddress());
-				stmt.setString(6, record.getCity());
-				stmt.setString(7, record.getState());
-				stmt.setString(8, record.getZip());
-				stmt.setString(9, record.getHomePhone());
-				stmt.setString(10, record.getCellPhone());
-				stmt.setInt(11, record.getCustomerId());
+					stmt.setInt(1, record.getCustomerId());
+					stmt.setString(2, record.getFirstName());
+					stmt.setString(3, record.getLastName());
+					stmt.setString(4, record.getSsn());
+					stmt.setString(5, record.getAddress());
+					stmt.setString(6, record.getCity());
+					stmt.setString(7, record.getState());
+					stmt.setString(8, record.getZip());
+					stmt.setString(9, record.getHomePhone());
+					stmt.setString(10, record.getCellPhone());
+					stmt.setInt(11, record.getCustomerId());
 
-				stmt.execute();
-				stmt.close();
-				conn.close();
+					stmt.execute();
+					stmt.close();
+					conn.close();
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			int index = customers.indexOf(record);
-			customers.set(index, record);
-		}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				int index = indexOfById(customers, record);
+				customers.set(index, record);
+			}}
 		return false;
 	}
+
+	static int indexOfById(List<Customer> list, Customer searchedObject) {
+		int x = 0;
+		for (Customer c : list) {
+			if (c.getCustomerId() == searchedObject.getCustomerId()) return x;
+			x++;
+		}
+		return -1;
+	}  
 
 	@Override
 	public Customer getRecord(Integer record) {

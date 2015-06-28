@@ -4,7 +4,7 @@ public class Account {
 
 	private long customer; //Customer ID
 	private long accountNumber;
-	private double checkingBalance = 0;
+	private double checkingBalance;
 	private String accountType;
 	
 	public long getAccountNumber() {

@@ -74,7 +74,7 @@ public class DAOFactory extends AbstractConnectionFactory {
 				Account account = new Account();
 				account.setAccountNumber(results.getLong("Account_No"));
 				account.setCheckingBalance(results.getDouble("Balance"));
-				account.setCheckingBalance(results.getLong("Customer_ID"));
+				account.setCustomer(results.getLong("Customer_ID"));
 				account.setAccountType(results.getString("Account_Type"));
 
 				accountDAO.addAccount(account);

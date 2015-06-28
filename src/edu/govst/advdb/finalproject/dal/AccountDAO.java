@@ -3,11 +3,14 @@ package edu.govst.advdb.finalproject.dal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.govst.advdb.finalproject.models.Account;
+import edu.govst.advdb.finalproject.models.Customer;
 
 public class AccountDAO implements basicCrud<Account, String> {
 
@@ -34,7 +37,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 	public void createRecord(Account record) {
 		final String COMMAND ="INSERT INTO Account (Customer_ID, Account_Type, Balance)" +
 				"VALUES (?, ?, ?)";
-		accounts.add(record);
+
 		try {
 			Connection conn = getConnection();
 
@@ -50,12 +53,31 @@ public class AccountDAO implements basicCrud<Account, String> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		try {
+			Connection conn = getConnection();
+
+			Statement stmt = conn.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT MAX(Account_No) FROM Account");
+			rs.next();
+
+			record.setAccountNumber(rs.getInt(1));
+
+			stmt.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		accounts.add(record);
 	}
 
 	@Override
 	public boolean deleteRecord(String record) {
 
-		final String COMMAND = "DELETE FROM CHECKING WHERE AccountNumber = ?";
+		final String COMMAND = "DELETE FROM Account WHERE Account_No = ?";
 		boolean recordFound = false;
 
 		for(int x = 0; x < accounts.size(); x++){
@@ -75,6 +97,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 				stmt.setString(1, record);
 				stmt.execute();
 				stmt.close();
+				conn.commit();
 				conn.close();
 
 			} catch (SQLException e) {
@@ -90,6 +113,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 		try {
 			Class.forName(driver);
 			conn = DriverManager.getConnection(dbType.toString(), username, password);
+			conn.setAutoCommit(true);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -105,27 +129,39 @@ public class AccountDAO implements basicCrud<Account, String> {
 				"Balance = ?" +
 				"WHERE Account_No = ?";
 
-		if(accounts.contains(record)) {
-			try {
-				Connection conn = getConnection();
+		for(int x = 0; x < accounts.size(); x++) {
+			if(accounts.get(x).getAccountNumber()==record.getAccountNumber()) {
+				try {
+					Connection conn = getConnection();
 
-				PreparedStatement stmt = conn.prepareStatement(COMMAND);
-				stmt.setLong(1, record.getCustomerId());
-				stmt.setString(2, record.getAccountType());
-				stmt.setDouble(3, record.getCurrentBalance());
-				stmt.setDouble(4, record.getAccountNumber());
+					PreparedStatement stmt = conn.prepareStatement(COMMAND);
+					stmt.setLong(1, record.getCustomerId());
+					stmt.setString(2, record.getAccountType());
+					stmt.setDouble(3, record.getCurrentBalance());
+					stmt.setDouble(4, record.getAccountNumber());
 
-				stmt.execute();
-				stmt.close();
-				conn.close();
+					stmt.execute();
+					stmt.close();
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			int index = accounts.indexOf(record);
-			accounts.set(index, record);
+					conn.close();
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				int index = indexOfById(accounts, record);
+				accounts.set(index, record);
+			} 
 		}
 		return false;
+	}
+	
+	static int indexOfById(List<Account> list, Account searchedObject) {
+		  int x = 0;
+		  for (Account a : list) {
+		    if (a.getAccountNumber() == searchedObject.getAccountNumber()) return x;
+		    x++;
+		  }
+		  return -1;
 	}
 
 	public List<Account> getAccounts() {
@@ -143,6 +179,16 @@ public class AccountDAO implements basicCrud<Account, String> {
 			}
 		}
 		return account;
+	}
+
+	public Account getRecord(int record) {
+		Account account = null;
+
+
+		account = accounts.get(record);
+
+		return account;
+
 	}
 
 	public void setUsername(String username) {

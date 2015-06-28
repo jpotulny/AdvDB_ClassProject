@@ -112,4 +112,12 @@ public class Customer {
 	public void setOtherPhone(String otherPhone) {
 		this.otherPhone = otherPhone;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this.customerId > ((Customer) obj).getCustomerId())
+			return true;
+		else
+			return false;
+	}
 }
