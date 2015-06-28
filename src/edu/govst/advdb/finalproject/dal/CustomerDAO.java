@@ -13,7 +13,7 @@ import edu.govst.advdb.finalproject.models.Account;
 import edu.govst.advdb.finalproject.models.Customer;
 
 public class CustomerDAO implements basicCrud<Customer,Integer> {
-	
+
 	private List<Customer> customers;
 
 	private DbTypes dbType;
@@ -30,7 +30,7 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 	public void addCustomer(Customer customer) {
 		customers.add(customer);
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -42,14 +42,14 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 	public List<Customer> getCustomers() {
 		return customers;
 	}
-	
+
 	@Override
 	public void createRecord(Customer record) {
 		final String CUSTOMER_COMMAND ="INSERT INTO Customer (First_Name, Last_Name, ssn, Street_Address, City, State, Zip, Primary_Phone, Other_Phone)" +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		final String PIN_COMMAND ="INSERT INTO Security (Customer_Id, Pin) VALUES (?,?)";
 		final String GET_CUST_ID ="SELECT MAX(Customer_ID) FROM Customer"; //Not thread safe
-		
+
 		customers.add(record);
 		try {
 			Connection conn = getConnection();
@@ -67,52 +67,45 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 
 			stmt.execute();
 			stmt.close();
-			
+
 			int customer = -1;
-			
+
 			Statement custStmt = conn.createStatement();
-			
+
 			ResultSet rs = custStmt.executeQuery(GET_CUST_ID);
 			rs.next();
 			customer = rs.getInt(1);
 			rs.close();
 			custStmt.close();
-			
+
 			PreparedStatement pinStmt = conn.prepareStatement(PIN_COMMAND);
 			pinStmt.setLong(1, customer);
 			pinStmt.setString(2, record.getPin());
-			
+
 			pinStmt.execute();
 			pinStmt.close();
-			
+
 			conn.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		
+
 	}
 
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
-				try {
-					Class.forName(driver);
-					conn = DriverManager.getConnection(dbType.toString());
-				} catch (SQLException e) {
-					try {
-						conn = DriverManager.getConnection(dbType.toString(),username,password);
-					} catch (SQLException f) {
-						f.printStackTrace();
-						throw f;
-					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(dbType.toString(),username,password);
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		return conn;
 	}
 
-	
+
 	@Override
 	public boolean deleteRecord(Integer record) {
 		final String COMMAND = "DELETE FROM Customer WHERE Customer_Id = ?";
@@ -164,7 +157,7 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 				Connection conn = getConnection();
 
 				PreparedStatement stmt = conn.prepareStatement(COMMAND);
-				
+
 				stmt.setInt(1, record.getCustomerId());
 				stmt.setString(2, record.getFirstName());
 				stmt.setString(3, record.getLastName());
@@ -193,7 +186,7 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 	@Override
 	public Customer getRecord(Integer record) {
 		Customer customer = null;
-		
+
 		for(int x = 0; x < customers.size(); x++) {
 			if(customers.get(x).getCustomerId() == record.intValue()) {
 				customer = customers.get(x);

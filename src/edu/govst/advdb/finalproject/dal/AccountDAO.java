@@ -20,7 +20,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 	private String password = "pots15";
 
 	private String driver = "oracle.jdbc.driver.OracleDriver";
-	
+
 	public AccountDAO() {
 		//this.dbType = dbType;
 		accounts = new ArrayList<Account>();
@@ -29,7 +29,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 	public void addAccount(Account account) {
 		accounts.add(account);
 	}
-	
+
 	@Override
 	public void createRecord(Account record) {
 		final String COMMAND ="INSERT INTO Account (Customer_ID, Account_Type, Balance)" +
@@ -87,18 +87,14 @@ public class AccountDAO implements basicCrud<Account, String> {
 
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
-				try {
-					Class.forName(driver);
-					conn = DriverManager.getConnection(dbType.toString());
-				} catch (SQLException | ClassNotFoundException e) {
-					try {
-						conn = DriverManager.getConnection(dbType.toString(),username,password);
-					} catch (SQLException f) {
-						f.printStackTrace();
-						throw f;
-					}
-				}
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(dbType.toString(), username, password);
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		return conn;
+
 	}
 
 	@Override
@@ -131,7 +127,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 		}
 		return false;
 	}
-	
+
 	public List<Account> getAccounts() {
 		return accounts;
 	}
@@ -139,7 +135,7 @@ public class AccountDAO implements basicCrud<Account, String> {
 	@Override
 	public Account getRecord(String record) {
 		Account account = null;
-		
+
 		for(int x = 0; x < accounts.size(); x++) {
 			if(Long.toString(accounts.get(x).getAccountNumber()).equals(record)) {
 				account = accounts.get(x);
