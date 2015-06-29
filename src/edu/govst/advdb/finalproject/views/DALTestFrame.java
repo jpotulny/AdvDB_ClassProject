@@ -70,41 +70,41 @@ public class DALTestFrame {
 			tranSelections[x] = rand.nextInt(2000) +1;
 		}		
 		
-//		System.out.println("5 predetermined customers, 5 random customers");
-//		System.out.println(separator2);
-//		System.out.println("Index\tName\t\tSSN\tPIN\tPhone");
-//		System.out.println(separator1);
-//		for(int x = 0; x < 10; x++) {
-//			Customer cTemp = customers.getRecord(custSelections[x]);
-//			
-//			System.out.println((x+1) + ".\t" + cTemp.getFirstName() + " " + cTemp.getLastName() + "\t" +
-//			cTemp.getSsn() + "\t" + cTemp.getHomePhone() + "\t" + cTemp.getPin());
-//		}
-//		
-//		System.out.println(separator1 + "\n\n\n");
-//		System.out.println("5 predetermined accounts, 5 random accounts");
-//		System.out.println(separator2);
-//		System.out.println("Index\tAccount No\tBalance\tCustomerID\tAccountType");
-//		System.out.println(separator1);
-//		for(int x = 0; x < 10; x++) {
-//			Account aTemp = accounts.getRecord(x);
-//
-//			System.out.println((x+1) + ".\t" + aTemp.getAccountNumber() + "\t" + aTemp.getCurrentBalance() + "\t" +
-//			aTemp.getCustomerId() + "\t" + aTemp.getAccountType());
-//		}
-//		
-//		System.out.println(separator1 + "\n\n\n");
-//		System.out.println("5 predetermined transactions, 5 random transactions");
-//		System.out.println(separator2);
-//		System.out.println("Index\tTransactionNumber\tAmount\tAccount No\tTransaction Name");
-//		System.out.println(separator1);
-//		for(int x = 0; x < 10; x++) {
-//			Transaction tTemp = transactions.getRecord(String.valueOf(tranSelections[x]));
-//			System.out.println((x+1) + ".\t" + tTemp.getTransactionNumber() + "\t" + tTemp.getAmount() + "\t" +
-//			tTemp.getAccountNumber() + "\t" + tTemp.getTransactionName());
-//		}
-//		System.out.println(separator1 + "\n\n\n");
-//		
+		System.out.println("5 predetermined customers, 5 random customers");
+		System.out.println(separator2);
+		System.out.println("Index\tName\t\tSSN\tPIN\tPhone");
+		System.out.println(separator1);
+		for(int x = 0; x < 10; x++) {
+			Customer cTemp = customers.getRecord(custSelections[x]);
+			
+			System.out.println((x+1) + ".\t" + cTemp.getFirstName() + " " + cTemp.getLastName() + "\t" +
+			cTemp.getSsn() + "\t" + cTemp.getHomePhone() + "\t" + cTemp.getPin());
+		}
+		
+		System.out.println(separator1 + "\n\n\n");
+		System.out.println("5 predetermined accounts, 5 random accounts");
+		System.out.println(separator2);
+		System.out.println("Index\tAccount No\tBalance\tCustomerID\tAccountType");
+		System.out.println(separator1);
+		for(int x = 0; x < 10; x++) {
+			Account aTemp = accounts.getRecord(Integer.toString(acctSelections[x]));
+
+			System.out.println((x+1) + ".\t" + aTemp.getAccountNumber() + "\t" + aTemp.getCurrentBalance() + "\t" +
+			aTemp.getCustomerId() + "\t" + aTemp.getAccountType());
+		}
+		
+		System.out.println(separator1 + "\n\n\n");
+		System.out.println("5 predetermined transactions, 5 random transactions");
+		System.out.println(separator2);
+		System.out.println("Index\tTransactionNumber\tAmount\tAccount No\tTransaction Name");
+		System.out.println(separator1);
+		for(int x = 0; x < 10; x++) {
+			Transaction tTemp = transactions.getRecord(String.valueOf(tranSelections[x]));
+			System.out.println((x+1) + ".\t" + tTemp.getTransactionNumber() + "\t" + tTemp.getAmount() + "\t" +
+			tTemp.getAccountNumber() + "\t" + tTemp.getTransactionName());
+		}
+		System.out.println(separator1 + "\n\n\n");
+		
 		System.out.println("Exercising Record UPDATE:");
 		
 		Account acct = new Account();

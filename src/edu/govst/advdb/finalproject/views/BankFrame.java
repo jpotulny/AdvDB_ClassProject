@@ -105,6 +105,8 @@ public class BankFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		dbtype = DbTypes.ORACLE;
+		
 		frmBankStart = new JFrame();
 		frmBankStart.setTitle("Banking Application");
 		frmBankStart.getContentPane().setBackground(Color.DARK_GRAY);
@@ -133,11 +135,16 @@ public class BankFrame {
 		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (checkLogin(txtCustomerID.getText(), pswdPIN.getPassword())) {
-					loginPanel.setVisible(false);
-					menuPanel.setVisible(true);
-				}else {
-					lblInvalid.setVisible(true);
+				try {
+					if (checkLogin(txtCustomerID.getText(), pswdPIN.getPassword())) {
+						loginPanel.setVisible(false);
+						menuPanel.setVisible(true);
+					}else {
+						lblInvalid.setVisible(true);
+					}
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				
 			}
@@ -372,9 +379,9 @@ public class BankFrame {
 		changePINPanel.add(btnMainMenu);
 	}
 	
-	private boolean checkLogin(String cusID, char[] pin) {
+	private boolean checkLogin(String cusID, char[] pin) throws ClassNotFoundException {
 		//check login name and PIN with database and if a match then return true, else return false
-		final String CHECK_LOGIN = "SELECT COUNT(*) FROM Security WHERE CustomerID = " + cusID + " AND PIN = " + pin.toString() + " AS ";
+		final String CHECK_LOGIN = "SELECT COUNT(*) FROM BANK_Security WHERE Customer_ID = " + cusID + " AND PIN = " + String.valueOf(pin);
 		ResultSet rs;
 		Statement stmt;
 		Connection conn;
@@ -382,6 +389,7 @@ public class BankFrame {
 			conn = getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(CHECK_LOGIN);
+			rs.next();
 			if (rs.getInt(1) == 1) {
 				customerID = cusID;
 				return true;
@@ -472,10 +480,11 @@ public class BankFrame {
 		transactions.createRecord(transaction);
 	}
 	
-	public Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException, ClassNotFoundException {
 		Connection conn = null;
+		Class.forName("oracle.jdbc.driver.OracleDriver");
 		try {
-		conn = DriverManager.getConnection(dbtype.toString());
+		conn = DriverManager.getConnection(dbtype.toString(), "pots15", "pots15");
 		conn.setAutoCommit(true); 			//12c doesn't respect this default setting so we put it in explicitly.
 		} catch (SQLException e) {
 			e.printStackTrace();
