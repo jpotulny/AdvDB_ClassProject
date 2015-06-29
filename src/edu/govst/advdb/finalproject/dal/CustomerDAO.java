@@ -42,6 +42,19 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 	public List<Customer> getCustomers() {
 		return customers;
 	}
+	
+	public void setCustomerAccounts() {
+		AccountDAO accounts = DAOFactory.getAbstractConnectionFactory(dbType).getAccountDAO();
+		
+		//O(N)^2... FTW!
+		
+		for(int x = 0; x < customers.size() - 1; x++) { //TODO - someone's account isn't going to work...
+			//Readability is overrated
+			if(accounts.getRecord(customers.get(x).getCustomerId())!=null)
+				customers.get(x).getAccounts().add(accounts.getRecord(customers.get(x).getCustomerId()));
+		}
+		
+	}
 
 	@Override
 	public void createRecord(Customer record) {

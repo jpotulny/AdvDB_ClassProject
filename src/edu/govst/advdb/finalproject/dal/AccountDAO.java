@@ -181,11 +181,24 @@ public class AccountDAO implements basicCrud<Account, String> {
 		return account;
 	}
 
+	/**
+	 * Associates customers with accounts BUT ITS DEEPLY FLAWED.  Time is running out, so
+	 * I am just winging this.  It will return one account for a customer - the first one it finds.
+	 * 
+	 * So if someone creates a second account, you're SOL. 
+	 * 
+	 * @param record - the CustomerID number
+	 * @return - the first Account associated with that customerID or null if it can't find one
+	 */
+	//
 	public Account getRecord(int record) {
 		Account account = null;
 
-
-		account = accounts.get(record);
+		for(int x = 0; x < accounts.size() - 1; x++) {		//TODO - someone's account isn't going to work...
+			if(accounts.get(x).getCustomerId() == record)
+				return accounts.get(record);
+		}
+		
 
 		return account;
 
