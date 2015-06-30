@@ -42,8 +42,8 @@ public class TransactionDAO implements basicCrud<Transaction,String> {
 
 	@Override
 	public void createRecord(Transaction record) {
-		final String DEPOSIT_COMMAND = "INSERT INTO Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, 0, ?)";
-		final String WITHDRAW_COMMAND = "INSERT INTO Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, ?, 0)";
+		final String DEPOSIT_COMMAND = "INSERT INTO BANK_Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, 0, ?)";
+		final String WITHDRAW_COMMAND = "INSERT INTO BANK_Transaction (Transaction_Name, Account_No, Withdraw, Deposit) VALUES (?, ?, ?, 0)";
 
 		try {
 			Connection conn = getConnection();

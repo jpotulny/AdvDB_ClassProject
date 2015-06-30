@@ -210,7 +210,8 @@ public class CustomerDAO implements basicCrud<Customer,Integer> {
 				}
 				int index = indexOfById(customers, record);
 				customers.set(index, record);
-			}}
+			}
+		}
 		return false;
 	}
 

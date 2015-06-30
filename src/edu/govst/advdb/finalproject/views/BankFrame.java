@@ -230,6 +230,7 @@ public class BankFrame {
 		btnChangePin.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnChangePin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				updatePIN(txtOldPin.getText(), txtNewPin.getText());
 				menuPanel.setVisible(false);
 				changePINPanel.setVisible(true);
 			}
@@ -352,7 +353,7 @@ public class BankFrame {
 		JButton button = new JButton("Submit");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updatePIN();
+				updatePIN(txtOldPin.getText(), txtNewPin.getText());
 			}
 		});
 		button.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -403,12 +404,11 @@ public class BankFrame {
 		
 	}
 	
-	private void updatePIN(){
+	private void updatePIN(String oldPIN, String newPIN){
 		//TODO Not implemented, requires a PIN to come from somewhere
-		String dummyVar = "";
 		for(Customer c : customers.getCustomers()) {
-			if(c.getPin() == dummyVar) {
-				c.setPin(dummyVar);
+			if(c.getPin() == oldPIN) {
+				c.setPin(newPIN);
 				customers.updateRecord(c);
 				break;
 			}
@@ -437,7 +437,7 @@ public class BankFrame {
 		//add amount to the database here
 		Transaction transaction = new Transaction();
 		Customer customer = new Customer();
-		customers.getRecord(Integer.parseInt(customerID));
+		customer = customers.getRecord(Integer.parseInt(customerID));
 		
 		transaction.setAccountNumber(customer.getAccounts().get(0).getAccountNumber());	//TODO - fix terribad algorithm behind this.
 		transaction.setAmount(-1 * amount);
@@ -449,7 +449,7 @@ public class BankFrame {
 		//add amount to the database here
 		Transaction transaction = new Transaction();
 		Customer customer = new Customer();
-		customers.getRecord(Integer.parseInt(customerID));
+		customer = customers.getRecord(Integer.parseInt(customerID));
 		
 		transaction.setAccountNumber(customer.getAccounts().get(0).getAccountNumber());  //TODO - fix terribad algorithm behind this.
 		transaction.setAmount(amount);
@@ -460,7 +460,7 @@ public class BankFrame {
 	private void withdrawChecking(float amount) {
 		Transaction transaction = new Transaction();
 		Customer customer = new Customer();
-		customers.getRecord(Integer.parseInt(customerID));
+		customer = customers.getRecord(Integer.parseInt(customerID));
 		
 		transaction.setAccountNumber(customer.getAccounts().get(0).getAccountNumber());  //TODO - fix terribad algorithm behind this.
 		transaction.setAmount(-1 * amount);
@@ -472,7 +472,7 @@ public class BankFrame {
 		//add amount to the database here
 		Transaction transaction = new Transaction();
 		Customer customer = new Customer();
-		customers.getRecord(Integer.parseInt(customerID));
+		customer = customers.getRecord(Integer.parseInt(customerID));
 		
 		transaction.setAccountNumber(customer.getAccounts().get(0).getAccountNumber());  //TODO - fix terribad algorithm behind this.
 		transaction.setAmount(amount);
